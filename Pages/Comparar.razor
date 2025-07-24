@@ -1,0 +1,53 @@
+﻿@page "/comparar"
+@inject ReconocimientoFacialBlazor.Services.IFaceRecognitionService FaceRecognitionService
+
+<h3>Comparador Facial</h3>
+
+<div>
+    <label>Imagen 1:</label>
+    <InputFile OnChange="LoadImage1" />
+    <br />
+    <label>Imagen 2:</label>
+    <InputFile OnChange="LoadImage2" />
+</div>
+
+<br />
+<button @onclick="CompararRostros" disabled="@(!CanCompare)">Comparar Rostros</button>
+
+@if (result.HasValue)
+{
+    <div class="alert alert-info mt-3">
+        <strong>Similitud:</strong> @result.Value.ToString("P2")
+        <br />
+        @(result.Value > 0.8 ? "¡Coincidencia probable!" : "No parecen coincidir")
+    </div>
+}
+
+@code {
+    private IBrowserFile? image1;
+    private IBrowserFile? image2;
+    private float? result;
+
+    private async Task LoadImage1(InputFileChangeEventArgs e)
+    {
+        image1 = e.File;
+        result = null;
+    }
+
+    private async Task LoadImage2(InputFileChangeEventArgs e)
+    {
+        image2 = e.File;
+        result = null;
+    }
+
+    private bool CanCompare => image1 != null && image2 != null;
+
+    private async Task CompararRostros()
+    {
+        if (image1 == null || image2 == null) return;
+
+        using var stream1 = image1.OpenReadStream();
+        using var stream2 = image2.OpenReadStream();
+        result = await FaceRecognitionService.CompareAsync(stream1, stream2);
+    }
+}
