@@ -13,6 +13,10 @@
     {
         <div>
             <img src="@image1Preview" style="max-width:200px; max-height:200px; margin:5px; border:1px solid #ccc;" />
+            @if (!string.IsNullOrEmpty(image1FileName))
+            {
+                <div style="text-align:center; font-size:small; color:#555;">@image1FileName</div>
+            }
         </div>
     }
 </div>
@@ -23,6 +27,10 @@
     {
         <div>
             <img src="@image2Preview" style="max-width:200px; max-height:200px; margin:5px; border:1px solid #ccc;" />
+            @if (!string.IsNullOrEmpty(image2FileName))
+            {
+                <div style="text-align:center; font-size:small; color:#555;">@image2FileName</div>
+            }
         </div>
     }
 </div>
@@ -45,11 +53,15 @@
     private string? image1Preview;
     private string? image2Preview;
     private float? distance;
+    private string? image1FileName;
+    private string? image2FileName;
+
 
     private async Task LoadImage1(InputFileChangeEventArgs e)
     {
         image1 = e.File;
         distance = null;
+        image1FileName = image1?.Name;
         if (image1 != null)
         {
             using var ms = new MemoryStream();
@@ -67,6 +79,7 @@
     {
         image2 = e.File;
         distance = null;
+        image2FileName = image2?.Name;
         if (image2 != null)
         {
             using var ms = new MemoryStream();
