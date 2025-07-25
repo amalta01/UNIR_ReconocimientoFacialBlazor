@@ -35,7 +35,8 @@ namespace ReconocimientoFacialBlazor.Services
 
             // Escala a similitud (1=igual, 0=diferente)
             float similarity = 1.0f - (float)distance;
-            return similarity;
+
+            return (float)distance;
         }
 
         private async Task<byte[]> ToByteArray(Stream input)
